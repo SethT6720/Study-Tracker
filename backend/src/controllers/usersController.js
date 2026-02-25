@@ -11,9 +11,33 @@ async function createUser(req, res) {
         console.log('User created successfully: ', result.rows[0]);
         res.status(201).json(result.rows[0]);
     } catch (err) {
-        console.error('Error creating user: ', err);
+        console.error('Error creating user: ', err.message);
         res.status(500).json({ error: err.message });
     }
 }
 
-module.exports = createUser;
+async function getUser(req, res) {
+    const id = req.params.id;
+
+    const queryText = 'SELECT * FROM users WHERE id = $1';
+    const values = [id];
+
+    try {
+        const result = await pool.query(queryText, values);
+
+        if (result.rowCount === 0) {
+            res.status(404).send('User not found');
+            return;
+        }
+        console.log(`Fetched user with id ${id}: `, result.rows[0]);
+        res.status(200).json(result.rows[0]);
+    } catch (err) {
+        console.error('Error fetching user: ', err.message);
+        res.status(500).json({ error: err.message });
+    }
+}
+
+module.exports = {
+    createUser: createUser,
+    getUser: getUser
+};
