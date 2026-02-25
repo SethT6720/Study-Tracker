@@ -76,7 +76,7 @@ async function deleteSubject(req, res) {
         }
 
         console.log(`Deleted subject with id ${id}`);
-        res.status(204)
+        res.status(204).send();
     } catch (err) {
         console.error(err.message);
         res.status(500).json({ error: err.message });

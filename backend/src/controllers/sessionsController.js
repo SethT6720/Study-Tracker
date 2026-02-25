@@ -39,11 +39,60 @@ async function getSessions(req, res) {
 }
 
 async function editSession(req, res) {
+    const info = req.body;
+    const editId = req.params.id;
 
+    let queryText = "UPDATE study_sessions SET";
+    let values = [];
+
+    const keys = Object.keys(info);
+    for (const key of keys) {
+        values.push(info[key]);
+        if (values.length > 1) {
+            queryText += ',';
+        }
+        queryText += ` ${key} = $${values.length}`;
+    }
+
+    values.push(editId);
+    queryText += ` WHERE id = $${values.length} RETURNING *`;
+    
+    try {
+        const result = await pool.query(queryText, values);
+
+        if (result.rowCount === 0) {
+            res.status(404).send(`Session with id ${editId} not found`);
+            return
+        }
+
+        console.log('Session edited succcessfully: ', result.rows[0]);
+        res.status(200).json(result.rows[0]);
+    } catch (err) {
+        console.error(err.message);
+        res.status(500).json({ error: err.message });
+    }
 }
 
 async function deleteSession(req, res) {
+    const id = req.params.id;
 
+    const queryText = 'DELETE FROM study_sessions WHERE id = $1';
+    const values = [id];
+
+    try {
+        const result = await pool.query(queryText, values);
+        
+        if (result.rowCount === 0) {
+            res.status(404).send(`Session with id ${id} not found`);
+            return;
+        }
+
+        console.log(`Session with id ${id} deleted successfully`);
+        res.status(204).send();
+    } catch (err) {
+        console.error(err.message);
+        res.status(500).json({ error: err.message });
+    }
 }
 
 module.exports =  {
