@@ -5,6 +5,7 @@ const pool = require('./db/pool');
 const usersRouter = require('./routes/users');
 const subjectsRouter = require('./routes/subjects');
 const sessionsRouter = require('./routes/sessions');
+const statsRouter = require('./routes/stats');
 const authRouter = require('./routes/auth');
 
 const app = express();
@@ -15,11 +16,9 @@ app.get('/', (req, res) => {
 });
 
 app.use('/users', usersRouter);
-
 app.use('/subjects', subjectsRouter);
-
 app.use('/sessions', sessionsRouter);
-
+app.use('/stats', statsRouter);
 app.use('/auth', authRouter);
 
 app.listen(process.env.PORT || 3000, () => {
