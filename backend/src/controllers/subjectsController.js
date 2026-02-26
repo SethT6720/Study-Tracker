@@ -1,6 +1,6 @@
 const pool = require('../db/pool');
 
-async function createSubject(req, res) {
+async function createSubject(req, res, next) {
     const subjectInfo = req.body;
 
     const queryText = 'INSERT INTO subjects (user_id, name) VALUES ($1, $2) RETURNING *';
@@ -11,12 +11,11 @@ async function createSubject(req, res) {
         console.log('Subject created successfully: ', result.rows[0]);
         res.status(201).json(result.rows[0]);
     } catch (err) {
-        console.error(err.message);
-        res.status(500).json({ error: err.message });
+        next(err);
     }
 }
 
-async function getSubject(req, res) {
+async function getSubject(req, res, next) {
     const user_id = req.user.id;
 
     const queryText = 'SELECT * FROM subjects WHERE user_id = $1';
@@ -33,12 +32,11 @@ async function getSubject(req, res) {
         console.log(`Fetched subjects under user_id ${user_id}: `, result.rows);
         res.status(200).json(result.rows);
     } catch (err) {
-        console.error(err.message);
-        res.status(500).json({ error: err.message });
+        next(err);
     }
 }
 
-async function editSubject(req, res) {
+async function editSubject(req, res, next) {
     const id = req.params.id;
     const user_id = req.user.id;
     const newInfo = req.body;
@@ -57,12 +55,11 @@ async function editSubject(req, res) {
         console.log(`Name of subject with id ${id} updated to ${newInfo.name}`);
         res.status(200).json(result.rows[0]);
     } catch (err) {
-        console.error(err.message);
-        res.status(500).json({ error: err.message });
+        next(err);
     }
 }
 
-async function deleteSubject(req, res) {
+async function deleteSubject(req, res, next) {
     const id = req.params.id;
     const user_id = req.user.id;
 
@@ -80,8 +77,7 @@ async function deleteSubject(req, res) {
         console.log(`Deleted subject with id ${id}`);
         res.status(204).send();
     } catch (err) {
-        console.error(err.message);
-        res.status(500).json({ error: err.message });
+        next(err);
     }
 }
 

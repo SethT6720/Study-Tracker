@@ -1,7 +1,7 @@
 const pool = require('../db/pool');
 const bcrypt = require('bcrypt');
 
-async function createUser(req, res) {
+async function createUser(req, res, next) {
     const userInfo = req.body;
     const hash = await bcrypt.hash(userInfo.password, 10);
 
@@ -18,12 +18,11 @@ async function createUser(req, res) {
             return;
         }
 
-        console.error('Error creating user: ', err.message);
-        res.status(500).json({ error: err.message });
+        next(err);
     }
 }
 
-async function getUser(req, res) {
+async function getUser(req, res, next) {
     const id = req.user.id;
 
     const queryText = 'SELECT * FROM users WHERE id = $1';
@@ -39,8 +38,7 @@ async function getUser(req, res) {
         console.log(`Fetched user with id ${id}: `, result.rows[0]);
         res.status(200).json(result.rows[0]);
     } catch (err) {
-        console.error('Error fetching user: ', err.message);
-        res.status(500).json({ error: err.message });
+        next(err);
     }
 }
 

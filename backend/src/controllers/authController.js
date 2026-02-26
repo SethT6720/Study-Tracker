@@ -2,7 +2,7 @@ const pool = require('../db/pool');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 
-async function login(req, res) {
+async function login(req, res, next) {
     const { username, password } = req.body;
     let result;
 
@@ -16,9 +16,7 @@ async function login(req, res) {
             return;
         }
     } catch (err) {
-        console.error(err.message);
-        res.status(500).json({ error: err.messaeg });
-        return;
+        next(err);
     }
 
     const correctPassword = await bcrypt.compare(password, result.rows[0].password);

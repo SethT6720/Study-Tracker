@@ -1,6 +1,6 @@
 const pool = require('../db/pool');
 
-async function getWeeklyStats(req, res) {
+async function getWeeklyStats(req, res, next) {
     const userId = req.user.id;
 
     const queryText = "SELECT SUM(duration) FROM study_sessions WHERE (start_time >= NOW() - INTERVAL '7 days') AND user_id = $1";
@@ -17,12 +17,11 @@ async function getWeeklyStats(req, res) {
         console.log(`Logged ${result.rows[0].sum} seconds of study time within past 7 days`);
         res.status(200).json(result.rows[0]);
     } catch (err) {
-        console.error(err.message);
-        res.status(500).json({ error: err.message });
+        next(err);
     }
 }
 
-async function getMonthlyStats(req, res) {
+async function getMonthlyStats(req, res, next) {
     const userId = req.user.id;
 
     const queryText = "SELECT SUM(duration) FROM study_sessions WHERE (start_time >= NOW() - INTERVAL '30 days') AND user_id = $1";
@@ -39,12 +38,11 @@ async function getMonthlyStats(req, res) {
         console.log(`Logged ${result.rows[0].sum} seconds of study time within past 30 days`);
         res.status(200).json(result.rows[0]);
     } catch (err) {
-        console.error(err.message);
-        res.status(500).json({ error: err.message });
+        next(err);
     }
 }
 
-async function getSubjectBreakdown(req, res) {
+async function getSubjectBreakdown(req, res, next) {
     const userId = req.user.id;
 
     const queryText = 'SELECT subject_id, SUM(duration) FROM study_sessions WHERE user_id = $1 GROUP BY subject_id'
@@ -61,12 +59,11 @@ async function getSubjectBreakdown(req, res) {
         console.log(`Subject Breakdown retrieved for user with id ${userId}: `, result.rows);
         res.status(200).json(result.rows);
     } catch (err) {
-        console.error(err.message);
-        res.status(500).json({ error: err.message });
+        next(err);
     }
 }
 
-async function getMostStudiedSubject(req, res) {
+async function getMostStudiedSubject(req, res, next) {
     const userId = req.user.id;
 
     const queryText = 'SELECT subject_id, SUM(duration) FROM study_sessions WHERE user_id = $1 GROUP BY subject_id ORDER BY SUM(duration) DESC LIMIT 1';
@@ -83,12 +80,11 @@ async function getMostStudiedSubject(req, res) {
         console.log(`Most studied subject fetched for user with id ${userId}: `, result.rows[0]);
         res.status(200).json(result.rows[0]);
     } catch (err) {
-        console.error(err.message);
-        res.status(500).json({ error: err.message });
+        next(err);
     }
 }
 
-async function getStudyStreak(req, res) {
+async function getStudyStreak(req, res, next) {
     const userId = req.user.id;
 
     const queryText = "SELECT DISTINCT DATE_TRUNC('day', start_time) AS day FROM study_sessions WHERE user_id = $1 ORDER BY day DESC";
@@ -136,8 +132,7 @@ async function getStudyStreak(req, res) {
         console.log(`Streak for user with id ${userId}: `, output);
         res.status(200).json(output);
     } catch (err) {
-        console.error(err.message);
-        res.status(500).json({ error: err.message });
+        next(err);
     }
 }
 

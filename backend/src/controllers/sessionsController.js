@@ -1,6 +1,6 @@
 const pool = require('../db/pool');
 
-async function createSession(req, res) {
+async function createSession(req, res, next) {
     const sessionInfo = req.body;
 
     const queryText = 'INSERT INTO study_sessions (user_id, subject_id, start_time, duration, notes) VALUES ($1, $2, $3, $4, $5) RETURNING *';
@@ -11,12 +11,11 @@ async function createSession(req, res) {
         console.log('Session created successfully: ', result.rows[0]);
         res.status(201).json(result.rows[0]);
     } catch (err) {
-        console.error(err.message);
-        res.status(500).json({ error: err.message });
+        next(err);
     }
 }
 
-async function getSessions(req, res) {
+async function getSessions(req, res, next) {
     const user_id = req.user.id;
 
     const queryText = 'SELECT * FROM study_sessions WHERE user_id = $1';
@@ -33,12 +32,11 @@ async function getSessions(req, res) {
         console.log(`Found ${result.rowCount} session(s) under user_id ${user_id}: `, result.rows);
         res.status(200).json(result.rows);
     } catch (err) {
-        console.error(err.message);
-        res.status(500).json({ error: err.message });
+        next(err);
     }
 }
 
-async function editSession(req, res) {
+async function editSession(req, res, next) {
     const info = req.body;
     const user_id = req.user.id;
     const editId = req.params.id;
@@ -69,12 +67,11 @@ async function editSession(req, res) {
         console.log('Session edited succcessfully: ', result.rows[0]);
         res.status(200).json(result.rows[0]);
     } catch (err) {
-        console.error(err.message);
-        res.status(500).json({ error: err.message });
+        next(err);
     }
 }
 
-async function deleteSession(req, res) {
+async function deleteSession(req, res, next) {
     const id = req.params.id;
     const user_id = req.user.id;
 
@@ -92,8 +89,7 @@ async function deleteSession(req, res) {
         console.log(`Session with id ${id} deleted successfully`);
         res.status(204).send();
     } catch (err) {
-        console.error(err.message);
-        res.status(500).json({ error: err.message });
+        next(err);
     }
 }
 
