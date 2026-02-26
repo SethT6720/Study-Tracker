@@ -17,7 +17,7 @@ async function createSession(req, res) {
 }
 
 async function getSessions(req, res) {
-    const user_id = req.params.user_id;
+    const user_id = req.user.id;
 
     const queryText = 'SELECT * FROM study_sessions WHERE user_id = $1';
     const values = [user_id];
@@ -40,6 +40,7 @@ async function getSessions(req, res) {
 
 async function editSession(req, res) {
     const info = req.body;
+    const user_id = req.user.id;
     const editId = req.params.id;
 
     let queryText = "UPDATE study_sessions SET";
@@ -54,8 +55,8 @@ async function editSession(req, res) {
         queryText += ` ${key} = $${values.length}`;
     }
 
-    values.push(editId);
-    queryText += ` WHERE id = $${values.length} RETURNING *`;
+    values.push(editId, user_id);
+    queryText += ` WHERE id = $${values.length - 1} AND user_id = $${values.length} RETURNING *`;
     
     try {
         const result = await pool.query(queryText, values);
@@ -75,9 +76,10 @@ async function editSession(req, res) {
 
 async function deleteSession(req, res) {
     const id = req.params.id;
+    const user_id = req.user.id;
 
-    const queryText = 'DELETE FROM study_sessions WHERE id = $1';
-    const values = [id];
+    const queryText = 'DELETE FROM study_sessions WHERE id = $1 AND user_id = $2';
+    const values = [id, user_id];
 
     try {
         const result = await pool.query(queryText, values);

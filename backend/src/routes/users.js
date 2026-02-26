@@ -6,6 +6,6 @@ const router = Router();
 
 router.post('/', createUser);
 
-router.get('/:id', authMiddleware, getUser);
+router.get('/', authMiddleware, getUser);
 
 module.exports = router;

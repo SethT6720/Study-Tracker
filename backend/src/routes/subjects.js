@@ -7,7 +7,7 @@ router.use(authMiddleware);
 
 router.post('/', createSubject);
 
-router.get('/:user_id', getSubject);
+router.get('/', getSubject);
 
 router.patch('/:id', editSubject);
 

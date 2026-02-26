@@ -17,7 +17,7 @@ async function createSubject(req, res) {
 }
 
 async function getSubject(req, res) {
-    const user_id = req.params.user_id;
+    const user_id = req.user.id;
 
     const queryText = 'SELECT * FROM subjects WHERE user_id = $1';
     const values = [user_id];
@@ -40,10 +40,11 @@ async function getSubject(req, res) {
 
 async function editSubject(req, res) {
     const id = req.params.id;
+    const user_id = req.user.id;
     const newInfo = req.body;
 
-    const queryText = 'UPDATE subjects SET name = $1 WHERE id = $2 RETURNING *';
-    const values = [newInfo.name, id];
+    const queryText = 'UPDATE subjects SET name = $1 WHERE id = $2 AND user_id = $3 RETURNING *';
+    const values = [newInfo.name, id, user_id];
 
     try {
         const result = await pool.query(queryText, values);
@@ -63,9 +64,10 @@ async function editSubject(req, res) {
 
 async function deleteSubject(req, res) {
     const id = req.params.id;
+    const user_id = req.user.id;
 
-    const queryText = 'DELETE FROM subjects WHERE id = $1';
-    const values = [id];
+    const queryText = 'DELETE FROM subjects WHERE id = $1 AND user_id = $2';
+    const values = [id, user_id];
 
     try {
         const result = await pool.query(queryText, values);

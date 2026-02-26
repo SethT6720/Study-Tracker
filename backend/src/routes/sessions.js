@@ -7,7 +7,7 @@ router.use(authMiddleware);
 
 router.post('/', createSession);
 
-router.get('/:user_id', getSessions);
+router.get('/', getSessions);
 
 router.patch('/:id', editSession);
 

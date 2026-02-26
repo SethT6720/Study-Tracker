@@ -24,7 +24,7 @@ async function createUser(req, res) {
 }
 
 async function getUser(req, res) {
-    const id = req.params.id;
+    const id = req.user.id;
 
     const queryText = 'SELECT * FROM users WHERE id = $1';
     const values = [id];
