@@ -5,6 +5,7 @@ const pool = require('./db/pool');
 const usersRouter = require('./routes/users');
 const subjectsRouter = require('./routes/subjects');
 const sessionsRouter = require('./routes/sessions');
+const authRouter = require('./routes/auth');
 
 const app = express();
 app.use(express.json());
@@ -19,15 +20,8 @@ app.use('/subjects', subjectsRouter);
 
 app.use('/sessions', sessionsRouter);
 
+app.use('/auth', authRouter);
+
 app.listen(process.env.PORT || 3000, () => {
     console.log("Server is up and running");
 });
-
-async function testConnection() {
-    try {
-        const result = await pool.query('SELECT NOW()');
-        console.log(result.rows);
-    } catch (err) {
-        console.error(err);
-    }
-}
