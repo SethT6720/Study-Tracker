@@ -4,7 +4,7 @@ async function createSubject(req, res) {
     const subjectInfo = req.body;
 
     const queryText = 'INSERT INTO subjects (user_id, name) VALUES ($1, $2) RETURNING *';
-    const values = [subjectInfo.user_id, subjectInfo.name];
+    const values = [req.user.id, subjectInfo.name];
 
     try {
         const result = await pool.query(queryText, values);

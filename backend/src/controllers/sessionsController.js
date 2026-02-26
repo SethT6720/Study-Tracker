@@ -4,7 +4,7 @@ async function createSession(req, res) {
     const sessionInfo = req.body;
 
     const queryText = 'INSERT INTO study_sessions (user_id, subject_id, start_time, duration, notes) VALUES ($1, $2, $3, $4, $5) RETURNING *';
-    const values = [sessionInfo.user_id, sessionInfo.subject_id, sessionInfo.start_time, sessionInfo.duration, sessionInfo.notes];
+    const values = [req.user.id, sessionInfo.subject_id, sessionInfo.start_time, sessionInfo.duration, sessionInfo.notes];
 
     try {
         const result = await pool.query(queryText, values);
