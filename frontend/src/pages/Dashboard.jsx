@@ -76,7 +76,7 @@ export default function Dashboard() {
     }, []);
 
     return (
-        <div className='h-screen bg-gray-900 p-6 flex flex-col'>
+        <div className='h-full bg-gray-900 p-6 flex flex-col'>
             {/* Header */}
             <div className='mb-6'>
                 <h1 className='text-4xl font-bold text-white'>Dashboard</h1>

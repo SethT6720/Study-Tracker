@@ -96,7 +96,7 @@ export default function Subject() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-900 p-6">
+    <div className="min-h-full bg-gray-900 p-6">
       <div className="max-w-2xl mx-auto">
         <div className="mb-6">
           <h1 className="text-4xl font-bold text-white">Subjects</h1>

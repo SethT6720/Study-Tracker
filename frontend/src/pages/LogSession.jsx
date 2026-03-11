@@ -1,10 +1,12 @@
 import { useState, useEffect } from "react";
 import { useAuth } from "../context/AuthContext";
 import { fetchSubjects } from "../utils/fetchers";
+import { useNavigate } from "react-router-dom";
 
 export default function LogSession() {
   const [subjects, setSubjects] = useState([]);
   const { token } = useAuth();
+  const navigate = useNavigate();
 
   const [selected, setSelected] = useState(-1);
   const [startDate, setStartDate] = useState(-1);
@@ -58,13 +60,14 @@ export default function LogSession() {
         },
         body: JSON.stringify(toSend),
       });
+      navigate('/dashboard');
     } catch (err) {
       console.log(err.message);
     }
   }
 
   return (
-    <div className="min-h-screen bg-gray-900 p-6 flex flex-col items-center justify-center">
+    <div className="min-h-full bg-gray-900 p-6 flex flex-col items-center justify-center">
       <div className="bg-gray-800 rounded-xl p-8 w-full max-w-md flex flex-col gap-6">
         <div>
           <h1 className="text-3xl font-bold text-white">Log Session</h1>

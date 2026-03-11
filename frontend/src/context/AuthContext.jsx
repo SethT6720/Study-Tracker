@@ -1,9 +1,13 @@
 import { createContext, useState, useContext } from 'react';
+import { isTokenValid } from '../utils/token';
 
 const AuthContext = createContext(null);
 
 export default function AuthProvider({ children }) {
-    const [token, setToken] = useState(localStorage.getItem('jwtToken') || '');
+    const [token, setToken] = useState(() => {
+        const stored = localStorage.getItem('jwtToken');
+        return isTokenValid(stored) ? stored : '';
+    });
 
     function login(token) {
         localStorage.setItem('jwtToken', token);
