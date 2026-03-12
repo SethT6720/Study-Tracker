@@ -31,7 +31,7 @@ export default function Register() {
                 },
                 body: JSON.stringify(toSend)
             });
-            navigate('/login');
+            navigate('/');
         } catch (err) {
             console.log(err.message);
             setError('Invalid username or password');
@@ -79,7 +79,7 @@ export default function Register() {
                     >Register</button>
                 </form>
                 <p className="text-gray-400 text-sm text-center">
-                    Already have an account? <span className="text-blue-400 cursor-pointer hover:underline" onClick={() => navigate('/login')}>Sign in</span>
+                    Already have an account? <span className="text-blue-400 cursor-pointer hover:underline" onClick={() => navigate('/')}>Sign in</span>
                 </p>
             </div>
         </div>

@@ -8,7 +8,7 @@ export default function ProtectedRoute({ children }) {
     const navigate = useNavigate();
 
     if (!isTokenValid(token)) {
-        return <Navigate to="/login" />
+        return <Navigate to="/" />
     }
 
     return children;

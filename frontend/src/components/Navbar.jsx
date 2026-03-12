@@ -35,7 +35,7 @@ export default function Navbar() {
         <button
           onClick={() => {
             logout();
-            navigate("/login");
+            navigate("/");
           }}
           className="text-red-400 hover:text-red-300 px-3 py-1 rounded-lg hover:bg-gray-700 transition-colors"
         >
